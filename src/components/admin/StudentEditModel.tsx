@@ -6,26 +6,17 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Label } from "@radix-ui/react-label"
 import { Input } from "../ui/input"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { Button } from "../ui/button"
-import { Controller, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAxiosWithAuth from "@/utils/axiosInstance"
 import { toast } from "sonner"
-import { Mentor, MentorClass, Student } from "@/lib/types"
-import { useEffect, useState } from "react"
+import { Student } from "@/lib/types"
+import { useState } from "react"
 
 
 const schema = z.object({

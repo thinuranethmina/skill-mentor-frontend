@@ -1,7 +1,6 @@
 import {
     Dialog,
     DialogContent,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -9,16 +8,14 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "../ui/button"
 import useAxiosWithAuth from "@/utils/axiosInstance"
-import { Mentor, SessionStatus } from "@/lib/types"
+import { Mentor } from "@/lib/types"
 import { useEffect, useState } from "react"
 import qs from "qs";
 import { format } from "date-fns"

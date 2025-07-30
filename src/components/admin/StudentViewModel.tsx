@@ -1,16 +1,12 @@
 import {
     Dialog,
     DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@radix-ui/react-label"
 import { Button } from "../ui/button"
 import { Student } from "@/lib/types"
 import { useState } from "react"
-import { R2_URL } from "@/config/env"
 
 
 interface Props {

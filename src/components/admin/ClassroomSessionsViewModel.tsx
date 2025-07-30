@@ -1,7 +1,6 @@
 import {
     Dialog,
     DialogContent,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -9,17 +8,14 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { DialogClose } from "@radix-ui/react-dialog"
 import { Button } from "../ui/button"
 import useAxiosWithAuth from "@/utils/axiosInstance"
-import { MentorClass, Session, SessionStatus } from "@/lib/types"
+import { MentorClass, SessionStatus } from "@/lib/types"
 import { useEffect, useState } from "react"
 import qs from "qs";
 import { format } from "date-fns"

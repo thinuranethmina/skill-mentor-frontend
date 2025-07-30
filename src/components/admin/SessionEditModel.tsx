@@ -101,7 +101,7 @@ export function SessionEditModel({ session, sessions, setSessions }: Props) {
             start_time: new Date(`${data.schedule_date}T${data.start_time}`).toISOString(),
             end_time: new Date(`${data.schedule_date}T${data.end_time}`).toISOString(),
             student: session.student,
-            class_room: session.class_room,
+            class_room: session.classroom,
             mentor: session.mentor,
             topic: session.topic,
             session_status: data.status,
