@@ -53,7 +53,7 @@ interface Props {
 }
 
 export function MentorCreateModel({ mentors, setMentors }: Props) {
-    const { register, handleSubmit, reset, formState: { errors, isValid } } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema)
     });
     const axios = useAxiosWithAuth();

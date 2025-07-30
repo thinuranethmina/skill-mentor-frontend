@@ -39,7 +39,7 @@ export function StudentEditModel({ student, students, setStudents }: Props) {
     const axios = useAxiosWithAuth();
     const [open, setOpen] = useState(false);
 
-    const { register, handleSubmit, reset, formState: { errors, isValid }, control } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
         }

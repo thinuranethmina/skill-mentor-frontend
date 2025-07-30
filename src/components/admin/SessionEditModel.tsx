@@ -11,7 +11,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
@@ -84,7 +83,7 @@ export function SessionEditModel({ session, sessions, setSessions }: Props) {
     );
     const [open, setOpen] = useState(false);
 
-    const { register, handleSubmit, reset, formState: { errors, isValid }, control } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors }, control } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             schedule_date: session.start_time ? format(new Date(session.start_time), "yyyy-MM-dd") : "",

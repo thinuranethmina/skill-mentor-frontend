@@ -75,7 +75,7 @@ export function ClassroomEditModel({ classroom, classrooms, setClassrooms }: Pro
         fetchMentors();
     }, []);
 
-    const { register, handleSubmit, reset, formState: { errors, isValid }, control } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors }, control } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             title: classroom.title,

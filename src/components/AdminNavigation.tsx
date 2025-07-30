@@ -3,18 +3,15 @@ import { Link } from "react-router";
 import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
 import SkillMentorLogo from "@/assets/logo.webp";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 type Props = {
   setSidebarOpen: (open: boolean) => void;
   sidebarOpen: boolean;
 };
 
-export function AdminNavigation({ setSidebarOpen, sidebarOpen }: Props ) {
+export function AdminNavigation({ setSidebarOpen, sidebarOpen }: Props) {
   const { isSignedIn } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
 
   const AuthButtons = ({ mobile = false }: { mobile?: boolean }) => (
     <div
@@ -28,7 +25,7 @@ export function AdminNavigation({ setSidebarOpen, sidebarOpen }: Props ) {
           <Link
             to="/dashboard"
             className={cn(mobile && "w-full")}
-            onClick={() => mobile && setIsOpen(false)}
+            onClick={() => mobile && setSidebarOpen(false)}
           >
             <Button variant="ghost" className={cn(mobile && "w-full")}>
               Dashboard
@@ -91,8 +88,8 @@ export function AdminNavigation({ setSidebarOpen, sidebarOpen }: Props ) {
             {
               sidebarOpen ? (
                 <X className="h-6 w-6" />
-              ):(
-                  <Menu className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
               )
             }
           </button>

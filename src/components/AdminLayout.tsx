@@ -1,5 +1,5 @@
 
-import { Link, NavLink, Outlet } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner"
 import { AdminNavigation } from "./AdminNavigation";

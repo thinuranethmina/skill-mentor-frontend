@@ -64,7 +64,7 @@ export function ClassroomCreateModel({ classrooms, setClassrooms }: Props) {
         fetchMentors();
     }, []);
 
-    const { register, handleSubmit, reset, formState: { errors, isValid }, control } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors }, control } = useForm<FormData>({
         resolver: zodResolver(schema)
     });
 

@@ -63,7 +63,7 @@ interface Props {
 }
 
 export function MentorEditModel({ mentor, mentors, setMentors }: Props) {
-    const { register, handleSubmit, reset, formState: { errors, isValid } } = useForm<FormData>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             fname: mentor.first_name,

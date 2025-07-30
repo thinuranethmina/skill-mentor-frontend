@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/components/hooks/use-toast";
 import { MentorClass, Session, Student } from "@/lib/types";
 import { BACKEND_URL } from "@/config/env";
 import { useAuth, useUser } from "@clerk/clerk-react";
