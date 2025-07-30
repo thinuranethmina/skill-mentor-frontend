@@ -2,45 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
 import SkillMentorLogo from "@/assets/logo.webp";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
-export function Navigation() {
+type Props = {
+  setSidebarOpen: (open: boolean) => void;
+  sidebarOpen: boolean;
+};
+
+export function AdminNavigation({ setSidebarOpen, sidebarOpen }: Props ) {
   const { isSignedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
-    <nav
-      className={cn(
-        "flex items-center gap-6 text-sm font-medium",
-        mobile && "flex-col items-start gap-4"
-      )}
-    >
-      <Link
-        to="/mentors"
-        className="hover:text-primary transition-colors"
-        onClick={() => mobile && setIsOpen(false)}
-      >
-        Mentors
-      </Link>
-      <Link
-        to="/about"
-        className="hover:text-primary transition-colors"
-        onClick={() => mobile && setIsOpen(false)}
-      >
-        About Us
-      </Link>
-      <Link
-        to="/terms-and-conditions"
-        className="hover:text-primary transition-colors"
-        onClick={() => mobile && setIsOpen(false)}
-      >
-        T & C
-      </Link>
-    </nav>
-  );
   const AuthButtons = ({ mobile = false }: { mobile?: boolean }) => (
     <div
       className={cn(
@@ -107,7 +82,21 @@ export function Navigation() {
   return (
     <header className="sticky top-0 z-50 py-2 text-white w-full bg-black backdrop-blur supports-[backdrop-filter]:bg-black/90">
       <div className="container flex flex-wrap h-14 items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center gap-5">
+
+          <button
+            className="md:hidden text-white bg-gray-600 p-2 rounded"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {
+              sidebarOpen ? (
+                <X className="h-6 w-6" />
+              ):(
+                  <Menu className="h-6 w-6" />
+              )
+            }
+          </button>
+
           <Link to="/" className="flex items-center space-x-2">
             <img
               src={SkillMentorLogo}
@@ -116,9 +105,6 @@ export function Navigation() {
             />
             <span className="font-semibold text-xl">SkillMentor</span>
           </Link>
-          <div className="ml-6 hidden md:block">
-            <NavItems />
-          </div>
         </div>
 
         {/* Desktop Auth Buttons */}
@@ -126,50 +112,6 @@ export function Navigation() {
           <AuthButtons />
         </div>
 
-        {/* Mobile Menu */}
-        <div className="md:hidden">
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="border-primary">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/10"
-              >
-                <Menu className="size-6" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[300px] bg-black text-white p-6"
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between mb-8">
-                  <Link
-                    to="/"
-                    className="flex items-center space-x-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <img
-                      src={SkillMentorLogo}
-                      alt="SkillMentor Logo"
-                      className="size-10 rounded-full"
-                    />
-                    <span className="font-semibold text-lg">SkillMentor</span>
-                  </Link>
-                </div>
-
-                <div className="space-y-6 flex-1">
-                  <NavItems mobile />
-                </div>
-
-                <div className="pt-6 border-t border-white/10">
-                  <AuthButtons mobile />
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
       </div>
     </header>
   );

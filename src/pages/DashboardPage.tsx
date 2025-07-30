@@ -4,7 +4,7 @@ import { CalendarDays } from "lucide-react";
 import { StatusPill } from "@/components/StatusPill";
 import { FullSession } from "@/lib/types";
 import { useNavigate } from "react-router";
-import { BACKEND_URL } from "@/config/env";
+import { BACKEND_URL, JWT_TEMPLATE } from "@/config/env";
 
 export default function DashboardPage() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -17,7 +17,7 @@ export default function DashboardPage() {
     async function createOrFetchUser() {
       if (!user) return;
 
-      const token = await getToken({ template: "skillmentor-auth-frontend" });
+      const token = await getToken({ template: `${JWT_TEMPLATE}` });
       if (!token) return;
 
       // Prepare a payload that matches with the  backend endpoint requirements

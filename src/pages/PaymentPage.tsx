@@ -14,12 +14,14 @@ import { useToast } from "@/components/hooks/use-toast";
 import { MentorClass, Session, Student } from "@/lib/types";
 import { BACKEND_URL } from "@/config/env";
 import { useAuth, useUser } from "@clerk/clerk-react";
+import { toast } from "sonner";
+import useAxiosWithAuth from "@/utils/axiosInstance";
 
 export default function PaymentPage() {
+  const axios = useAxiosWithAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { sessionId } = useParams();
-  const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -44,11 +46,7 @@ export default function PaymentPage() {
         }
       );
       if (!result.ok) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch student data. Please try again later.",
-          variant: "destructive",
-        });
+        toast("Failed to fetch student data. Please try again later.");
         navigate("/dashboard");
         return;
       }
@@ -65,12 +63,7 @@ export default function PaymentPage() {
         }
       );
       if (!result2.ok) {
-        toast({
-          title: "Error",
-          description:
-            "Failed to fetch mentor class data. Please try again later.",
-          variant: "destructive",
-        });
+        toast("Failed to fetch mentor class data. Please try again later.");
         navigate("/dashboard");
         return;
       }
@@ -83,7 +76,7 @@ export default function PaymentPage() {
     }
   }, [user]);
 
-  interface FileChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
+  interface FileChangeEvent extends React.ChangeEvent<HTMLInputElement> { }
 
   const handleFileChange = (e: FileChangeEvent): void => {
     if (e.target.files && e.target.files[0]) {
@@ -123,35 +116,58 @@ export default function PaymentPage() {
 
       const token = await getToken();
 
-      const result = await fetch(`${BACKEND_URL}/academic/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(newSession),
-      });
+      const formData = new FormData();
+      formData.append("sessionJson", JSON.stringify(newSession));
+      formData.append("paymentReceipt", file);
 
-      if (!result.ok) {
-        throw new Error("Failed to create session");
+      console.log(JSON.stringify(newSession));
+
+      try {
+        const res = await axios.post(`/academic/session`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status == 200) {
+          toast.success("Your bank slip has been uploaded and verified. Session scheduled successfully.");
+
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 2000);
+          return;
+        }
+      } catch (error: any) {
+        console.log(error);
+        toast.error("Error create session", {
+          description: error?.response?.data?.message || "Something went wrong.",
+        })
+      } finally {
+        setIsUploading(false);
       }
 
-      toast({
-        title: "Payment Confirmed",
-        description:
-          "Your bank slip has been uploaded and verified. Session scheduled successfully.",
-      });
+      // const result = await fetch(`${BACKEND_URL}/academic/session`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   body: formData,
+      // });
 
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
+      // if (!result.ok) {
+      //   throw new Error("Failed to create session");
+      // }
+
+      // toast({
+      //   title: "Payment Confirmed",
+      //   description:
+      //     "Your bank slip has been uploaded and verified. Session scheduled successfully.",
+      // });
+
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was a problem scheduling your session. Please try again.",
-        variant: "destructive",
-      });
+      toast("There was a problem scheduling your session. Please try again.");
       setIsUploading(false);
     }
   };

@@ -53,7 +53,7 @@ export default function HomePage() {
         ) : (
           <Link to="/login">
             <Button size="lg" className="text-xl">
-              Sign up to see all tutors
+              Sign up to Start Learning
             </Button>
           </Link>
         )}

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Building2, Calendar, GraduationCap } from "lucide-react";
+import { Building2, Calendar, GraduationCap, MousePointer2 } from "lucide-react";
 import type { MentorClass } from "@/lib/types";
 import { SchedulingModal } from "@/components/SchedulingModel";
 import { SignupDialog } from "@/components/SignUpDialog";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/clerk-react";
+import { R2_URL } from "@/config/env";
+import { Link } from "react-router";
 
 export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
@@ -38,17 +40,20 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
                   {mentorClass.enrolled_student_count} enrolled students
                 </p>
               </div> */}
-              <div className="flex items-center space-x-2">
-                <img
-                  src={mentorClass.mentor.mentor_image}
-                  alt={mentorClass.mentor.first_name}
-                  className="size-6 object-cover object-top rounded-full"
-                />
-                <span className="text-sm">
-                  {mentorClass.mentor.first_name +
-                    " " +
-                    mentorClass.mentor.last_name}
-                </span>
+              <div className="flex">
+                <Link className="flex items-center space-x-2" target="_blank" to={`/mentor/${mentorClass.mentor.mentor_id}`}>
+                  <img
+                    src={R2_URL + mentorClass.mentor.mentor_image}
+                    alt={mentorClass.mentor.first_name}
+                    className="size-6 object-cover object-top rounded-full"
+                  />
+                  <span className="text-sm">
+                    {mentorClass.mentor.first_name +
+                      " " +
+                      mentorClass.mentor.last_name}
+                  </span>
+                  <MousePointer2 className="size-4" />
+                </Link>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Building2 className="size-6" />
@@ -63,7 +68,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
               <div className="size-20 bg-muted flex items-center justify-center">
                 {mentorClass.class_image ? (
                   <img
-                    src={mentorClass.class_image}
+                    src={R2_URL + mentorClass.class_image}
                     alt={mentorClass.title}
                     className="w-full h-full object-cover rounded-full"
                   />
