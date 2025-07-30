@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@clerk/clerk-react';
-import React from 'react'
 import { Link } from 'react-router';
 
 export default function TermsAndConditionPage() {

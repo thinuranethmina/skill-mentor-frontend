@@ -16,7 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { BACKEND_URL, R2_URL } from "@/config/env";
+import { R2_URL } from "@/config/env";
 import { MentorClass } from "@/lib/types";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";

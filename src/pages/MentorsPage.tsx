@@ -4,7 +4,6 @@ import { R2_URL } from "@/config/env";
 import { Mentor } from "@/lib/types";
 import useAxiosWithAuth from "@/utils/axiosInstance";
 import { useAuth } from "@clerk/clerk-react";
-import { GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
