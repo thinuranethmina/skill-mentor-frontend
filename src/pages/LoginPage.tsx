@@ -1,9 +1,25 @@
-import { SignUp } from "@clerk/clerk-react";
+import { SignUp, useUser } from "@clerk/clerk-react";
 import AWSCertified1Img from "@/assets/aws-certified-1.webp";
 import MicrosoftCertified1Img from "@/assets/microsoft-certified-1.webp";
 import AWSCertified3Img from "@/assets/aws-certified-3.webp";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 export default function LoginPage() {
+  const { user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoaded || !user) return;
+
+    const role = user.publicMetadata?.role;
+
+    if (role === "admin") navigate("/admin");
+    else if (role === "mentor") navigate("/mentor");
+    else navigate("/dashboard");
+  }, [isLoaded, user, navigate]);
+
+
   return (
     <div className="relative flex min-h-screen w-full">
       {/* Left side - Hero Section */}
@@ -63,7 +79,6 @@ export default function LoginPage() {
       <div className="flex w-full items-center justify-center px-6 lg:w-1/2">
         <div className="w-full max-w-[400px] space-y-8">
           <SignUp
-            forceRedirectUrl="/dashboard"
             appearance={{
               elements: {
                 formButtonPrimary: "bg-primary",

@@ -4,7 +4,7 @@ import { CalendarDays } from "lucide-react";
 import { StatusPill } from "@/components/StatusPill";
 import { FullSession } from "@/lib/types";
 import { useNavigate } from "react-router";
-import { BACKEND_URL } from "@/config/env";
+import { BACKEND_URL, JWT_TEMPLATE, R2_URL } from "@/config/env";
 
 export default function DashboardPage() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -15,9 +15,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function createOrFetchUser() {
+
       if (!user) return;
 
-      const token = await getToken({ template: "skillmentor-auth-frontend" });
+      if (user.publicMetadata.role === "ADMIN") return;
+
+      const token = await getToken({ template: `${JWT_TEMPLATE}` });
       if (!token) return;
 
       // Prepare a payload that matches with the  backend endpoint requirements
@@ -45,6 +48,8 @@ export default function DashboardPage() {
         if (!createdUser.ok) {
           throw new Error("Failed to create/fetch user");
         }
+
+        user.publicMetadata.role = "STUDENT";
 
         // Logging the details to the console
         const userData = await createdUser.json();
@@ -134,7 +139,7 @@ export default function DashboardPage() {
             <div className="size-24 rounded-full bg-white/10 mb-4 relative">
               {course.mentor.mentor_image ? (
                 <img
-                  src={course.mentor.mentor_image}
+                  src={R2_URL + course.mentor.mentor_image}
                   alt={course.mentor.first_name}
                   className="w-full h-full object-cover object-top rounded-full"
                 />

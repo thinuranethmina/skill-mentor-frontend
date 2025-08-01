@@ -19,25 +19,25 @@ export function Navigation() {
       )}
     >
       <Link
-        to="/"
+        to="/mentors"
         className="hover:text-primary transition-colors"
         onClick={() => mobile && setIsOpen(false)}
       >
-        Tutors
+        Mentors
       </Link>
       <Link
-        to="/"
+        to="/about"
         className="hover:text-primary transition-colors"
         onClick={() => mobile && setIsOpen(false)}
       >
         About Us
       </Link>
       <Link
-        to="/"
+        to="/terms-and-conditions"
         className="hover:text-primary transition-colors"
         onClick={() => mobile && setIsOpen(false)}
       >
-        Resources
+        T & C
       </Link>
     </nav>
   );

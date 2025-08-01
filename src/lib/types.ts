@@ -48,6 +48,7 @@ export interface MentorClass {
     phone_number: string;
     qualification: string;
     mentor_image: string;
+    bio: string;
   };
 }
 
@@ -92,6 +93,8 @@ export interface Mentor {
   phone_number: string;
   qualification: string;
   mentor_image: string;
+  bio: string;
+  classrooms: ClassRoom[];
 }
 
 export enum SessionStatus {
@@ -103,10 +106,11 @@ export enum SessionStatus {
 export interface FullSession {
   session_id: number;
   student: Student;
-  class_room: ClassRoom;
+  classroom: ClassRoom;
   mentor: Mentor;
   topic: string;
   start_time: string;
   end_time: string;
   session_status: SessionStatus;
+  payment_reciept: string;
 }
