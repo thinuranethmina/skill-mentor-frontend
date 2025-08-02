@@ -23,11 +23,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAxiosWithAuth from "@/utils/axiosInstance"
 import { toast } from "sonner"
-import { FullSession } from "@/lib/types"
+import { FullSession, SessionStatus } from "@/lib/types"
 import { useEffect, useState } from "react"
 import { Calendar } from "../ui/calendar"
 import { isAfter, parseISO, format } from "date-fns";
 import { Fancybox } from "@fancyapps/ui"
+import { R2_URL } from "@/config/env"
 
 
 const timeStringToDate = (dateStr: string, timeStr: string) => {
@@ -41,8 +42,8 @@ const schema = z.object({
     status: z.string().min(1, { message: "Status is required" }),
 }).refine((data) => {
     const now = new Date();
-    const selectedDate = parseISO(data.schedule_date);
-    return !isAfter(now, selectedDate); // schedule_date must be today or future
+    const selectedDate = parseISO(data.schedule_date + " " + data.start_time);
+    return !(isAfter(now, selectedDate) && data.status === SessionStatus.ACCEPTED); // schedule_date must be today or future
 }, {
     message: "Schedule date cannot be in the past",
     path: ["schedule_date"],
@@ -52,7 +53,7 @@ const schema = z.object({
     const isDateToday = format(new Date(), "yyyy-MM-dd") === data.schedule_date;
 
     if (isDateToday) {
-        return isAfter(startDateTime, now); // start time must be in future
+        return !(isAfter(now, startDateTime) && data.status === SessionStatus.ACCEPTED); // start time must be in future
     }
 
     return true; // valid if not today
@@ -66,6 +67,15 @@ const schema = z.object({
 }, {
     message: "End time must be after Start time",
     path: ["end_time"],
+}).refine((data) => {
+    const now = new Date();
+    const startDateTime = timeStringToDate(data.schedule_date, data.start_time);
+
+    return !(!isAfter(now, startDateTime) && data.status === SessionStatus.COMPLETED);
+
+}, {
+    message: "Still not started",
+    path: ["schedule_date"],
 });
 
 type FormData = z.infer<typeof schema>;
@@ -78,20 +88,19 @@ interface Props {
 
 export function SessionEditModel({ session, sessions, setSessions }: Props) {
     const axios = useAxiosWithAuth();
-    const [date, setDate] = useState<Date | undefined>(
-        session.start_time ? new Date(session.start_time) : undefined
-    );
     const [open, setOpen] = useState(false);
 
     const { register, handleSubmit, reset, formState: { errors }, control } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
-            schedule_date: session.start_time ? format(new Date(session.start_time), "yyyy-MM-dd") : "",
+            schedule_date: session.start_time ? format(new Date(session.start_time), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
             start_time: session.start_time ? format(new Date(session.start_time), "HH:mm") : "",
             end_time: session.end_time ? format(new Date(session.end_time), "HH:mm") : "",
             status: session.session_status,
         }
     });
+    console.log("start_time raw:", session.start_time);
+    console.log("parsed:", new Date(session.start_time));
 
     const onSubmit = async (data: FieldValues) => {
 
@@ -100,7 +109,7 @@ export function SessionEditModel({ session, sessions, setSessions }: Props) {
             start_time: new Date(`${data.schedule_date}T${data.start_time}`).toISOString(),
             end_time: new Date(`${data.schedule_date}T${data.end_time}`).toISOString(),
             student: session.student,
-            class_room: session.classroom,
+            classroom: session.classroom,
             mentor: session.mentor,
             topic: session.topic,
             session_status: data.status,
@@ -166,12 +175,24 @@ export function SessionEditModel({ session, sessions, setSessions }: Props) {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-3">
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="schedule_date">Schedule Date</Label>
-                            <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={(d) => setDate(d)}
-                                className="rounded-md border mx-auto"
-                                {...register("schedule_date")}
+                            <Controller
+                                name="schedule_date"
+                                control={control}
+                                render={({ field }) => {
+                                    const selectedDate = field.value ? new Date(field.value) : undefined;
+
+                                    return (
+                                        <Calendar
+                                            mode="single"
+                                            selected={selectedDate}
+                                            onSelect={(selectedDate) => {
+                                                field.onChange(selectedDate ? format(selectedDate, "yyyy-MM-dd") : "");
+                                            }}
+                                            defaultMonth={selectedDate}
+                                            className="rounded-md border mx-auto"
+                                        />
+                                    );
+                                }}
                             />
                             {errors.schedule_date && (
                                 <p className="text-red-500 text-sm">{errors.schedule_date.message}</p>
@@ -229,7 +250,7 @@ export function SessionEditModel({ session, sessions, setSessions }: Props) {
                             <p className="font-medium">Payment Receipt</p>
                             <a href={session.payment_reciept} data-fancybox="gallery">
                                 <img
-                                    src={session.payment_reciept}
+                                    src={R2_URL + session.payment_reciept}
                                     className="w-full max-h-[400px] object-contain rounded-md border"
                                 />
                             </a>
