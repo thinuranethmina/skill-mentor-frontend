@@ -16,8 +16,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { isSignedIn } = useAuth();
 
-  // Use a simple threshold to decide if the bio is long enough
-  const bioTooLong = mentorClass.mentor.subject.length > 200;
+  const bioTooLong = mentorClass.mentor.bio.length > 200;
 
   const handleSchedule = () => {
     if (!isSignedIn) {
@@ -56,12 +55,12 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
                 </Link>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Building2 className="size-6" />
-                <span>{mentorClass.mentor.profession}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Calendar className="size-6" />
                 <span>{mentorClass.mentor.qualification}</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Building2 className="size-6" />
+                <span>{mentorClass.mentor.title}</span>
               </div>
             </div>
             <div className="w-36">
@@ -89,7 +88,7 @@ export function MentorCard({ mentorClass }: { mentorClass: MentorClass }) {
                   !isExpanded && bioTooLong ? "line-clamp-3" : ""
                 )}
               >
-                {mentorClass.mentor.subject}
+                {mentorClass.mentor.bio}
               </p>
               {bioTooLong && (
                 <button

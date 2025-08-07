@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { R2_URL } from "@/config/env";
 import { Mentor } from "@/lib/types";
 import useAxiosWithAuth from "@/utils/axiosInstance";
@@ -13,6 +14,7 @@ export default function MentorsPage() {
     const axios = useAxiosWithAuth();
     const { isSignedIn } = useAuth();
     const route = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function fetchMentors() {
@@ -23,6 +25,7 @@ export default function MentorsPage() {
                 if (res.status === 200) {
                     console.log(res.data);
                     setMentors(res.data);
+                    setIsLoading(false);
                 }
             } catch (error: any) {
                 console.log(error);
@@ -65,26 +68,58 @@ export default function MentorsPage() {
             </div>
 
 
-            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3'>
-                {
-                    mentors.map(mentor => (
-                        <Card className="flex flex-col h-full" role="button" onClick={() => route(`/mentor/${mentor.mentor_id}`)}>
-                            <div className="p-6 flex-1 flex flex-col">
-                                <div className='flex flex-row align-middle justify-between gap-4'>
-                                    <div className="flex flex-col items-start">
-                                        <h3 className="font-semibold">{mentor.first_name} {mentor.last_name}</h3>
-                                        <p className="text-sm text-muted-foreground">{mentor.profession}</p>
-                                        <p className="text-sm text-muted-foreground">{mentor.qualification}</p>
-                                    </div>
-                                    <div>
-                                        <img src={R2_URL + mentor.mentor_image} className='w-20 h-20 rounded-full object-cover mx-6' alt={mentor.first_name + " " + mentor.last_name} />
+
+            {
+                isLoading ? (
+                    <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3'>
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <Card key={index} className="flex flex-col h-full">
+                                <div className="p-6 flex-1 flex flex-col">
+                                    <div className='flex flex-row align-middle justify-between gap-4'>
+                                        <div className="flex flex-grow flex-col gap-2 items-start">
+                                            <Skeleton className="h-4 w-7/12"></Skeleton>
+                                            <Skeleton className="h-4 w-1/2"></Skeleton>
+                                            <Skeleton className="h-4 w-3/4"></Skeleton>
+                                        </div>
+                                        <div>
+                                            <Skeleton className="w-20 h-20 rounded-full"></Skeleton>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Card>
-                    ))
-                }
-            </div>
+                            </Card>
+                        ))}
+                    </div>
+                ) : (
+
+                    <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3'>
+                        {
+                            mentors.length === 0 ? (
+                                <div className="col-span-3">
+                                    <p className="text-center text-muted-foreground">No mentors found</p>
+                                </div>
+                            ) : (
+                                mentors.map(mentor => (
+                                    <Card key={mentor.mentor_id} className="flex flex-col h-full" role="button" onClick={() => route(`/mentor/${mentor.mentor_id}`)}>
+                                        <div className="p-6 flex-1 flex flex-col">
+                                            <div className='flex flex-row align-middle justify-between gap-4'>
+                                                <div className="flex flex-col items-start">
+                                                    <h3 className="font-semibold">{mentor.first_name} {mentor.last_name}</h3>
+                                                    <p className="text-sm text-muted-foreground">{mentor.qualification}</p>
+                                                    <p className="text-sm text-muted-foreground">{mentor.title}</p>
+                                                </div>
+                                                <div>
+                                                    <img src={R2_URL + mentor.mentor_image} className='w-20 h-20 rounded-full object-cover mx-6' alt={mentor.first_name + " " + mentor.last_name} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                )))
+                        }
+                    </div>
+
+
+                )
+            }
         </div>
     )
 }

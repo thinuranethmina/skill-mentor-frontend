@@ -56,7 +56,7 @@ export default function MentorPage() {
 
         isLoading ? (
             <div className="container py-10" >
-                <div className="grid grid-cols-1 gap-4 bg-white p-10 rounded-lg">
+                <div className="grid grid-cols-1 gap-4 bg-white p-4 md:p-6 lg:p-10 rounded-lg">
 
                     <div>
                         <div className='w-40 h-40 mx-auto overflow-hidden rounded-full'>
@@ -99,7 +99,7 @@ export default function MentorPage() {
         ) : (
 
             <div className="container py-10">
-                <div className="grid grid-cols-1 gap-4 bg-white p-10 rounded-lg">
+                <div className="grid grid-cols-1 gap-4 bg-white p-4 md:p-6 lg:p-10 rounded-lg">
 
                     <div>
                         <div className='w-40 h-40 mx-auto overflow-hidden rounded-full'>
@@ -130,6 +130,11 @@ export default function MentorPage() {
                     <div className='flex flex-col gap-3 rounded-md border border-gray-200 p-4'>
                         <p className='font-semibold'>Classes:</p>
                         <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3'>
+                            {
+                                mentor.classrooms.length === 0 && (
+                                    <p className='col-span-3 text-center text-gray-400'>No classes available</p>
+                                )
+                            }
                             {
                                 mentor.classrooms.map((classroom) => {
 

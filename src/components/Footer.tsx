@@ -53,7 +53,7 @@ export function Footer() {
 
   return (
     <footer className="bg-black text-white py-16 supports-[backdrop-filter]:bg-black/95">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick links</h3>
