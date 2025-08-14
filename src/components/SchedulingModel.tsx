@@ -10,6 +10,7 @@ import {
 } from "./ui/dialog";
 import { useNavigate } from "react-router";
 import type { MentorClass } from "@/lib/types";
+import { toast } from "sonner";
 
 interface SchedulingModalProps {
   isOpen: boolean;
@@ -45,6 +46,14 @@ export function SchedulingModal({
         Number.parseInt(hours),
         Number.parseInt(minutes)
       );
+
+      const now = new Date();
+      if (sessionDateTime < now) {
+        toast.error("Invalid date", {
+          description: "Schedule date should be after today",
+        })
+        return;
+      }
 
       const sessionId = `${mentorClass.class_room_id}-${Date.now()}`;
       const searchParams = new URLSearchParams({
@@ -91,6 +100,9 @@ export function SchedulingModal({
                 </Button>
               ))}
             </div>
+          </div>
+          <div>
+            <p className="font-medium text-sm">Session fee: {mentorClass.mentor.session_fee}/=</p>
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-6">

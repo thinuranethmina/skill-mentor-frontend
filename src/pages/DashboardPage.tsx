@@ -161,7 +161,7 @@ export default function DashboardPage() {
               </p>
               <div className="flex items-center text-blue-100/80 text-sm mt-2">
                 <CalendarDays className="mr-2 h-4 w-4" />
-                Next Session: {new Date(course.start_time).toLocaleDateString()}
+                Session Date: {new Date(course.start_time).toLocaleDateString()}
               </div>
             </div>
           </div>
