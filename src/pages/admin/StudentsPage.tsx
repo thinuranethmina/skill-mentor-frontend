@@ -70,7 +70,8 @@ export default function StudentsPage() {
             { header: "Email", accessorKey: "email" },
             { header: "Phone", accessorKey: "phone_number" },
             {
-                header: "Action",
+                id: "action",
+                header: () => <div className="text-center">Action</div>,
                 cell: (info) => {
                     const student = info.row.original;
                     return (

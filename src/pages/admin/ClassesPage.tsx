@@ -75,7 +75,8 @@ const getColumns = (
             accessorKey: "enrolled_student_count",
         },
         {
-            header: "Action",
+            id: "action",
+            header: () => <div className="text-center">Action</div>,
             cell: (info) => {
                 const classroom = info.row.original
                 return (

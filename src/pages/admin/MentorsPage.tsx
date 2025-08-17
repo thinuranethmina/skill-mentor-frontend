@@ -99,7 +99,8 @@ export default function MentorsPage() {
                 accessorKey: "subject",
             },
             {
-                header: "Action",
+                id: "action",
+                header: () => <div className="text-center">Action</div>,
                 cell: (info) => {
                     const mentor = info.row.original;
                     return (
