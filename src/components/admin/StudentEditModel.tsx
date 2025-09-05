@@ -42,6 +42,10 @@ export function StudentEditModel({ student, students, setStudents }: Props) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
+            fname: student.first_name,
+            lname: student.last_name,
+            phone: Number.parseInt(student.phone_number),
+            address: student.address
         }
     });
 
