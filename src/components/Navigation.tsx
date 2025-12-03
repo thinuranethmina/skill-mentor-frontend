@@ -6,10 +6,14 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
+import { useBackend } from "@/context/BackendContext";
 
 export function Navigation() {
   const { isSignedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const { isDeveloper, backendProvider, isRemote, setRemote } = useBackend();
 
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
     <nav
@@ -104,8 +108,23 @@ export function Navigation() {
     </div>
   );
 
+  function handleBackendProviderToggle(checked: boolean) {
+    setRemote(checked);
+  }
+
   return (
     <header className="sticky top-0 z-50 py-2 text-white w-full bg-black backdrop-blur supports-[backdrop-filter]:bg-black/90">
+      <div className={` ${isDeveloper ? 'block' : 'hidden'} absolute top-24 left-0 transform -translate-x-[98%] hover:translate-x-0 transition-transform duration-500 bg-orange-200 p-4 rounded-r-xl shadow-lg group border-r-[4px] border-orange-900 text-black `}>
+        <div>
+          <h1 className="text-2xl font-bold">Backend Provider</h1>
+          <p className="text-sm">Swich between backend providers</p>
+        </div>
+        <div className="flex items-center space-x-2 mt-2">
+          <Switch
+            onCheckedChange={handleBackendProviderToggle} checked={isRemote} />
+          <Label htmlFor="airplane-mode">{isRemote ? "Remote (Railway.io)" : "Localhost"} {backendProvider}</Label>
+        </div>
+      </div>
       <div className="container flex flex-wrap h-14 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center space-x-2">

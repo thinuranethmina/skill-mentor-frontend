@@ -11,7 +11,7 @@ import { Input } from "../ui/input"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { Button } from "../ui/button"
 import { FieldValues, useForm } from "react-hook-form";
-import { z } from "zod";
+import { email, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAxiosWithAuth from "@/utils/axiosInstance"
 import { toast } from "sonner"
@@ -22,7 +22,7 @@ import { useState } from "react"
 const schema = z.object({
     fname: z.string().min(1, { message: "First name is required" }),
     lname: z.string().min(1, { message: "Last name is required" }),
-    phone: z.number("Phone number is required"),
+    phone: z.number().nullable().optional(),
     address: z.string().min(1, { message: "Address is required" })
 });
 
@@ -44,7 +44,7 @@ export function StudentEditModel({ student, students, setStudents }: Props) {
         defaultValues: {
             fname: student.first_name,
             lname: student.last_name,
-            phone: Number.parseInt(student.phone_number),
+            phone: Number.parseInt(student.phone_number) || 0,
             address: student.address
         }
     });
@@ -52,26 +52,24 @@ export function StudentEditModel({ student, students, setStudents }: Props) {
     const onSubmit = async (data: FieldValues) => {
 
         let payload = {
+            cleark_student_id: student.clerk_student_id,
             student_id: student.student_id,
+            email: student.email,
             first_name: data.fname,
             last_name: data.lname,
-            phone_number: data.phone,
+            phone_number: Number.parseInt(data.phone),
             address: data.address
         };
 
-        const formData = new FormData();
-        formData.append("classroomJson", JSON.stringify(payload));
-
-        if (data.class_image[0]) {
-            formData.append("classRoomImage", data.class_image[0]);
-        }
-
         try {
-            const res = await axios.put("/academic/student");
+
+            console.log(payload);
+
+            const res = await axios.put("/academic/student", payload);
 
             if (res.status === 200) {
                 const newStudent = res.data;
-                toast.success("Classroom updated successfully");
+                toast.success("Student updated successfully");
 
                 setStudents(students.map((s) => {
                     if (s.student_id === newStudent.student_id) {
@@ -129,7 +127,7 @@ export function StudentEditModel({ student, students, setStudents }: Props) {
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="address">Address</Label>
-                            <Input id="address" {...register("phone")} />
+                            <Input id="address" {...register("address")} />
                             {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                         </div>
                     </div>

@@ -3,36 +3,44 @@ import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "@/config/env";
 import { MentorClass } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import useAxiosWithAuth from "@/utils/axiosInstance";
 
 export default function HomePage() {
   const { isSignedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [mentorClasses, setMentorClasses] = useState<MentorClass[]>([]);
+  const axios = useAxiosWithAuth();
 
   // Load all mentor classes
   useEffect(() => {
+
     async function fetchMentorClasses() {
+      if (!axios) return;
       try {
-        const response = await fetch(`${BACKEND_URL}/academic/classroom`);
+        const response = await axios.get("/academic/classroom")
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch mentor classes");
+        if (response.status === 200) {
+          const data = response.data;
+          setMentorClasses(data);
+          setIsLoading(false);
         }
-
-        const data = await response.json();
-        setMentorClasses(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching mentor classes:", error);
+      } catch (error: any) {
+        console.log(error)
+        toast.error("Error fetching classrooms", {
+          description:
+            error?.response?.data?.message || "Something went wrong.",
+        })
       }
+
     }
 
     fetchMentorClasses();
-  }, []);
+
+  }, [axios]);
 
   return (
     <div className="py-10">

@@ -12,44 +12,53 @@ export function Footer() {
   const axios = useAxiosWithAuth();
 
   useEffect(() => {
-    async function fetchMentors() {
 
+    async function fetchMentors() {
+      if (!axios) return;
       try {
-        const res = await axios.get("/academic/mentor");
+        const res = await axios.get("/academic/mentor")
 
         if (res.status === 200) {
           setMentors(res.data);
         }
       } catch (error: any) {
-        console.log(error);
+        console.log(error)
         toast.error("Error fetching mentors", {
-          description: error?.response?.data?.message || "Something went wrong.",
+          description:
+            error?.response?.data?.message || "Something went wrong.",
         })
       }
+
     }
+
     fetchMentors();
 
-  }, []);
+  }, [axios]);
 
   useEffect(() => {
-    async function fetchClassrooms() {
 
+    async function fetchClassrooms() {
+      if (!axios) return;
       try {
-        const res = await axios.get("/academic/classroom");
+        const res = await axios.get("/academic/classroom")
 
         if (res.status === 200) {
           setClassrooms(res.data);
         }
       } catch (error: any) {
-        console.log(error);
+        console.log(error)
         toast.error("Error fetching classrooms", {
-          description: error?.response?.data?.message || "Something went wrong.",
+          description:
+            error?.response?.data?.message || "Something went wrong.",
         })
       }
+
     }
+
     fetchClassrooms();
 
-  }, []);
+  }, [axios]);
+
 
   return (
     <footer className="bg-black text-white py-16 supports-[backdrop-filter]:bg-black/95">

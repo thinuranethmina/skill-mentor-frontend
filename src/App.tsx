@@ -16,8 +16,10 @@ import AboutPage from "./pages/AboutPage";
 import TermsAndConditionPage from "./pages/TermsAndConditionPage";
 import MentorsPage from "./pages/MentorsPage";
 import ScrollToTop from "./utils/ScrollToTop";
+import TestPage from "./pages/TestPage";
 
 function App() {
+
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -32,6 +34,7 @@ function App() {
           <Route path="/terms-and-conditions" element={<TermsAndConditionPage />} />
           <Route path="/mentors" element={<MentorsPage />} />
           <Route path="/mentor/:id" element={<MentorPage />} />
+          <Route path="/test" element={<TestPage />} />
 
           <Route
             path="/dashboard"

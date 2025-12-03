@@ -1,18 +1,24 @@
-import { BACKEND_URL, JWT_TEMPLATE } from "@/config/env";
+import { JWT_TEMPLATE } from "@/config/env";
 import { useAuth } from "@clerk/clerk-react";
 import axios from "axios";
-import { useEffect, useRef } from "react";
-
-const axiosInstance = axios.create({
-    baseURL: `${BACKEND_URL}`,
-});
+import { useEffect, useMemo, useRef } from "react";
+import { useBackend } from "@/context/BackendContext";
 
 const useAxiosWithAuth = () => {
     const { getToken, isLoaded } = useAuth();
     const interceptorRef = useRef<number | null>(null);
+    const { backendProvider } = useBackend();
+
+    const axiosInstance = useMemo(() => {
+        if (!backendProvider) return null;
+
+        return axios.create({
+            baseURL: backendProvider,
+        });
+    }, [backendProvider]);
 
     useEffect(() => {
-        if (!isLoaded) return;
+        if (!axiosInstance || !isLoaded) return;
 
         interceptorRef.current = axiosInstance.interceptors.request.use(async (config) => {
             const token = await getToken({ template: `${JWT_TEMPLATE}` });
@@ -34,7 +40,7 @@ const useAxiosWithAuth = () => {
                 axiosInstance.interceptors.request.eject(interceptorRef.current);
             }
         };
-    }, [getToken, isLoaded]);
+    }, [axiosInstance, getToken, isLoaded]);
 
     return axiosInstance;
 };

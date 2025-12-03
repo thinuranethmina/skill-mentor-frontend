@@ -46,6 +46,7 @@ export default function StudentsPage() {
     useEffect(() => {
         async function fetchStudents() {
             if (!user) return;
+            if (!axios) return;
             try {
                 const res = await axios.get("/academic/student", { params: { search } });
                 if (res.status === 200) {
